@@ -223,7 +223,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           className={`flex items-center gap-3 py-2 px-4 cursor-pointer transition-colors ${
             isSelected
               ? 'bg-[#6366F1] text-white'
-              : 'hover:bg-[#2A2D47] text-gray-300 hover:text-white'
+              : theme === 'dark'
+              ? 'hover:bg-[#2A2D47] text-gray-300 hover:text-white'
+              : 'hover:bg-gray-100 text-gray-700 hover:text-gray-900'
           } ${
             level === 0
               ? 'font-medium'
@@ -237,7 +239,13 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         >
           {(hasChildren || hasDevices) && (
             <ChevronRightIcon
-              className={`w-4 h-4 transition-transform ${
+          <span className={`text-sm flex-1 ${
+            selectedDeviceId === device.id 
+              ? 'text-white' 
+              : theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            {device.serial_number}
+          </span>
                 isExpanded ? 'rotate-90' : ''
               } text-gray-400`}
             />
@@ -286,7 +294,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               className={`flex items-center gap-3 py-2 px-4 cursor-pointer transition-colors font-medium ${
                 isSelected
                   ? 'bg-[#6366F1] text-white'
-                  : 'hover:bg-[#2A2D47] text-gray-300 hover:text-white'
+                  : theme === 'dark'
+                  ? 'hover:bg-[#2A2D47] text-gray-300 hover:text-white'
+                  : 'hover:bg-gray-100 text-gray-700 hover:text-gray-900'
+                  ? 'hover:bg-[#2A2D47] text-gray-300 hover:text-white'
+                  : 'hover:bg-gray-100 text-gray-700 hover:text-gray-900'
               }`}
               onClick={() => {
                 toggleExpanded(companyName);
@@ -306,7 +318,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               <ChevronRightIcon
                 className={`w-4 h-4 transition-transform ${
                   isExpanded ? 'rotate-90' : ''
-                } text-gray-400`}
+                } ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                }`}
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                }`}
               />
               <div
                 className="w-[16px] h-[16px] bg-no-repeat bg-center bg-contain filter brightness-0 invert"
@@ -314,7 +330,13 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   backgroundImage: `url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Im0zIDkgOS03IDkgNy05IDEzLTkgN3oiLz48L3N2Zz4=')`,
                 }}
               />
-              <span className="text-sm">{companyName}</span>
+              <span className={`text-sm ${
+                isSelected 
+                  ? 'text-white' 
+                  : theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+                {companyName}
+              </span>
             </div>
 
             {isExpanded && (
@@ -331,23 +353,39 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   };
 
   return (
-    <div className="w-64 bg-[#1E1F2E] border-r border-[#2A2D47]">
+    <div className={`w-64 border-r flex flex-col h-full ${
+      theme === 'dark' 
+        ? 'bg-[#1E1F2E] border-[#2A2D47]' 
+        : 'bg-white border-gray-200'
+    }`}>
       <div className="p-4">
-        <h1 className="text-white text-base font-medium mb-4 tracking-wider">
+        <h1 className={`text-base font-medium mb-4 tracking-wider ${
+          theme === 'dark' ? 'text-white' : 'text-gray-900'
+        }`}>
           Production Map
         </h1>
 
         <div className="relative mb-4">
-          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <SearchIcon className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+          }`} />
           <input
             placeholder="Search"
-            className="w-full pl-10 h-9 rounded-lg border bg-[#2A2D47] border-[#3A3D57] text-white placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+            className={`w-full pl-10 h-9 rounded-lg border focus:outline-none focus:ring-1 ${
+              theme === 'dark'
+                ? 'bg-[#2A2D47] border-[#3A3D57] text-white placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500'
+                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500'
+            }`}
           />
         </div>
       </div>
 
-      <div className="border-t border-[#2A2D47]">
-        <div className="max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-white scrollbar-track-transparent">
+      <div className={`border-t flex-1 overflow-hidden ${
+        theme === 'dark' ? 'border-[#2A2D47]' : 'border-gray-200'
+      }`}>
+        <div className={`h-full overflow-y-auto scrollbar-thin scrollbar-track-transparent ${
+          theme === 'dark' ? 'scrollbar-thumb-white' : 'scrollbar-thumb-gray-400'
+        }`}>
           {renderCompanyHierarchy()}
         </div>
       </div>
